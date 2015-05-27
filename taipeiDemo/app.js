@@ -1,32 +1,22 @@
-
-
+//for geckoGpios.js
 window.addEventListener("load", function() {
-  console.log("Hello World!");
-  GPIO.requestGPIOAccess().then(
-    function(gpioAccess){
-      GPIO.gpio = gpioAccess;
-      Promise.all([
-        GPIO.setPort(196,"in"),  //btnport
-        GPIO.setPort(197,"out")  //ledport
-      ]).then(gpioLoad,
-        function(){
-          console.log("failed promise.all");
-        });
-    },
-    function(){
-      console.log("request gpio access failed");
-    }
-  );
+  console.log("Hello Real World!");
+  Promise.all([
+    navigator.setGpioPort(198,"in"),
+    navigator.setGpioPort(199,"out"),
+    navigator.setI2cPort(0,0x48)
+  ]).then(gpioLoad);
 });
 
-function gpioLoad(pins){
+function gpioLoad(ports){
   console.log("gpio load");
   var displayColor = false;
   var ledValue = false;
   
   var btnEle = document.getElementById("webbtn");
-  var btnPort = pins[0];
-  var ledPort = pins[1];
+  var btnPort = ports[0];
+  var ledPort = ports[1];
+  var tempSensor = ports[2];
  
   //btnEle.onclick = changeDisplayColor;
   btnEle.onclick = function(){
@@ -39,6 +29,14 @@ function gpioLoad(pins){
       toggleLed();
     }
   };
+  
+  setInterval(function(){
+    readTempSensor(31.0).then(
+      function(){displayColor=false;changeDisplayColor();},
+      function(){displayColor=true;changeDisplayColor();}
+    );
+  },1000);
+  
   
   function changeDisplayColor(){
     console.log("change display color.");
@@ -66,5 +64,23 @@ function gpioLoad(pins){
   function rotateMotor(){
     console.log("rotate motor");
   }
+  
+  //readTempSensor
+  function readTempSensor(threshold){
+    return new Promise(function(resolve,reject){
+      Promise.all([
+        tempSensor.read(0x00,true),
+        tempSensor.read(0x01,true)
+      ]).then(function(v){
+        var temp = ((v[0] << 8) + v[1]) / 128.0;
+        console.log(temp);
+        console.log(threshold);
+        if(threshold < temp){
+          resolve();
+        }else{
+          reject();
+        }
+      });
+    });
+  }
 }
-
