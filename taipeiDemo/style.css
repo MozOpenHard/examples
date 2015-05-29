@@ -11,9 +11,23 @@ html,body {
 	padding-top: 50px;
 	padding-left: 100px;
 }
+#contents{
+  margin-top: 50px;
+}
 h1{
-  font-size: 48pt;
+  font-size: 144pt;
   margin-top: 0;
+  margin-bottom: 0;
+}
+.title{
+  font-size: 72pt;
+  position: absolute;
+  right: 100pt;
+  bottom: 50pt;
+}
+h2{
+  font-size: 36pt;
+  margin-bottom: 0; 
 }
 .demo{
   font-size: 36pt;

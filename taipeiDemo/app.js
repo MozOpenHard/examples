@@ -1,6 +1,5 @@
 //for geckoGpios.js
 window.addEventListener("load", function() {
-  console.log("Hello Real World!");
   Promise.all([
     navigator.setGpioPort(198,"in"),
     navigator.setGpioPort(199,"out"),
@@ -25,27 +24,27 @@ function gpioLoad(ports){
     changeDisplayColor();
     toggleLed();
   };
+  
+  //Physical button change
   btnPort.onchange = function(value){
     if(value == 0){
       changeDisplayColor();
       toggleLed();
     }
   };
-  /*
+  
   setInterval(function(){
-    readTempSensor(31.0).then(
-      function(){displayColor=false;changeDisplayColor();},
-      function(){displayColor=true;changeDisplayColor();}
+    readTempSensor().then(
+      function(value){
+        print("valueEle1",value);
+      }
     );
   },1000);
-  */
+  
   
   setInterval(function(){
     readDistSensor().then(function(value){
-      print("valueEle1",value);
-      if(value < 50){
-        changeDisplayColor();
-      }
+      print("valueEle2",value);
     });
   },1000);
   
@@ -78,7 +77,7 @@ function gpioLoad(ports){
   }
   
   //readTempSensor
-  function readTempSensor(threshold){
+  function readTempSensor(){
     return new Promise(function(resolve,reject){
       Promise.all([
         tempSensor.read(0x00,true),
@@ -86,7 +85,6 @@ function gpioLoad(ports){
       ]).then(function(v){
         var temp = ((v[0] << 8) + v[1]) / 128.0;
         console.log(temp);
-        console.log(threshold);
         resolve(temp);
       },function(){
         reject();
