@@ -25,6 +25,13 @@ h1{
   right: 100pt;
   bottom: 50pt;
 }
+.qrcode{
+  position: absolute;
+  width: 300;
+  height: 300;
+  right: 300pt;
+  bottom: 200pt;
+}
 h2{
   font-size: 36pt;
   margin-bottom: 0; 

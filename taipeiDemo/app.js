@@ -1,15 +1,19 @@
 //for geckoGpios.js
 window.addEventListener("load", function() {
   Promise.all([
+    // init gpio ports
     navigator.setGpioPort(198,"in"),
     navigator.setGpioPort(199,"out"),
-    navigator.setI2cPort(0,0x48),
+    // init I2C ports
+    //navigator.setI2cPort(0,0x48),
+    navigator.setI2cPort(0,0x36),
     navigator.setI2cPort(2,0x70)
   ]).then(gpioLoad);
 });
 
 function gpioLoad(ports){
   console.log("gpio load");
+  
   var displayColor = false;
   var ledValue = false;
   
@@ -19,13 +23,13 @@ function gpioLoad(ports){
   var tempSensor = ports[2];
   var distSensor = ports[3];
  
-  //btnEle.onclick = changeDisplayColor;
+  //Web button change event
   btnEle.onclick = function(){
     changeDisplayColor();
     toggleLed();
   };
   
-  //Physical button change
+  //Physical button change event
   btnPort.onchange = function(value){
     if(value == 0){
       changeDisplayColor();
@@ -33,6 +37,7 @@ function gpioLoad(ports){
     }
   };
   
+  /*
   setInterval(function(){
     readTempSensor().then(
       function(value){
@@ -40,19 +45,27 @@ function gpioLoad(ports){
       }
     );
   },1000);
+  */
   
-  
+  // read temperature sensor every second
   setInterval(function(){
-    readDistSensor().then(function(value){
+    readRotateSensor().then(value => {
+        print("valueEle1",value);
+    });
+  },1000);
+  /*
+  // read Distance sensor every second
+  setInterval(function(){
+    readDistSensor().then(value => {
       print("valueEle2",value);
     });
   },1000);
-  
-  
+  */
+  // change background color
   function changeDisplayColor(){
     console.log("change display color.");
     if(!displayColor){
-      document.body.style.background = "#FA8072";
+      document.body.style.background = "#7280FA";
       displayColor = true;
     }else{
       document.body.style.background = "#FFFFFF";
@@ -60,6 +73,7 @@ function gpioLoad(ports){
     }
   }
   
+  //toggle led light
   function toggleLed(value){
     console.log("toggle led");
     if(!ledValue){
@@ -71,20 +85,18 @@ function gpioLoad(ports){
     }      
   }
   
-  //todo
-  function rotateMotor(){
-    console.log("rotate motor");
-  }
-  
-  //readTempSensor
+  //read temperature sensor
   function readTempSensor(){
     return new Promise(function(resolve,reject){
+      
+      //get temperature value
       Promise.all([
         tempSensor.read(0x00,true),
         tempSensor.read(0x01,true)
       ]).then(function(v){
+        console.log(v[0] +','+ v[1]);
+        //calculate temperature
         var temp = ((v[0] << 8) + v[1]) / 128.0;
-        console.log(temp);
         resolve(temp);
       },function(){
         reject();
@@ -92,21 +104,48 @@ function gpioLoad(ports){
     });
   }
   
+  // read distance sensor
   function readDistSensor(threshold){
     console.log("read dist");
     return new Promise(function(resolve,reject){
+      
+      // measure distance
       distSensor.write8(0x00,0x00);
       sleep(1);
       distSensor.write8(0x00,0x51);
       sleep(70);
+      
+      // get distance value
       Promise.all([
         distSensor.read(0x02,true),
         distSensor.read(0x03,true)
       ]).then(function(v){
-        console.log(v[0]);
-        console.log(v[1]);
+        
+        //calculate distance
         var dist = ((v[0] << 8) + v[1]);
         resolve(dist);
+      },function(){
+        reject();
+      });
+    });
+  }
+  
+  //read rotaly sensor
+  function readRotateSensor(){
+    console.log("readrotate");
+    return new Promise(function(resolve,reject){
+      
+      distSensor.write16(0x00,0x0A);
+      sleep(1);
+      //get temperature value
+      Promise.all([
+        tempSensor.read(0x00,false)
+        //tempSensor.read(0x01,true)
+      ]).then(function(v){
+        console.log(v[0]);
+        //calculate temperature
+        //var temp = ((v[0] << 8) + v[1]) / 128.0;
+        //resolve(temp);
       },function(){
         reject();
       });
