@@ -5,8 +5,7 @@ window.addEventListener("load", function() {
     navigator.setGpioPort(198,"in"),
     navigator.setGpioPort(199,"out"),
     // init I2C ports
-    //navigator.setI2cPort(0,0x48),
-    navigator.setI2cPort(0,0x36),
+    navigator.setI2cPort(0,0x48),
     navigator.setI2cPort(2,0x70)
   ]).then(gpioLoad);
 });
@@ -37,30 +36,21 @@ function gpioLoad(ports){
     }
   };
   
-  /*
-  setInterval(function(){
-    readTempSensor().then(
-      function(value){
-        print("valueEle1",value);
-      }
-    );
-  },1000);
-  */
   
   // read temperature sensor every second
   setInterval(function(){
-    readRotateSensor().then(value => {
+    readTempSensor().then(value => {
         print("valueEle1",value);
     });
   },1000);
-  /*
+  
   // read Distance sensor every second
   setInterval(function(){
     readDistSensor().then(value => {
       print("valueEle2",value);
     });
   },1000);
-  */
+  
   // change background color
   function changeDisplayColor(){
     console.log("change display color.");
@@ -124,28 +114,6 @@ function gpioLoad(ports){
         //calculate distance
         var dist = ((v[0] << 8) + v[1]);
         resolve(dist);
-      },function(){
-        reject();
-      });
-    });
-  }
-  
-  //read rotaly sensor
-  function readRotateSensor(){
-    console.log("readrotate");
-    return new Promise(function(resolve,reject){
-      
-      distSensor.write16(0x00,0x0A);
-      sleep(1);
-      //get temperature value
-      Promise.all([
-        tempSensor.read(0x00,false)
-        //tempSensor.read(0x01,true)
-      ]).then(function(v){
-        console.log(v[0]);
-        //calculate temperature
-        //var temp = ((v[0] << 8) + v[1]) / 128.0;
-        //resolve(temp);
       },function(){
         reject();
       });
