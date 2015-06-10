@@ -21,6 +21,8 @@ function gpioLoad(ports){
   var ledPort = ports[1];
   var tempSensor = ports[2];
   var distSensor = ports[3];
+  
+  var _interval = 100;
  
   //Web button change event
   btnEle.onclick = function(){
@@ -40,16 +42,18 @@ function gpioLoad(ports){
   // read temperature sensor every second
   setInterval(function(){
     readTempSensor().then(value => {
-        print("valueEle1",value);
+      print("valueEle1",value);
+      circle(value);
     });
-  },1000);
+  },_interval);
   
   // read Distance sensor every second
   setInterval(function(){
     readDistSensor().then(value => {
       print("valueEle2",value);
+      stick(value);
     });
-  },1000);
+  },_interval);
   
   // change background color
   function changeDisplayColor(){
@@ -120,6 +124,18 @@ function gpioLoad(ports){
     });
   }
   
+  function stick(value){
+    var ele = document.getElementById("stick");
+    ele.style.width = (value*10) + "px";
+  }
+  function circle(value){
+    var ele = document.getElementById("circle");
+    var radius = 25 + ((value-25) * 50);
+    ele.style.width = (radius) + "pt";
+    ele.style.height = (radius) + "pt";
+    ele.style.top = (350 - (radius/2.0)) + "pt";
+    ele.style.left = (500 - (radius/2.0)) + "pt";
+  }
   
   //utils
   function print(eleName,str){

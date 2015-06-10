@@ -39,3 +39,21 @@ h2{
 .demo{
   font-size: 36pt;
 }
+
+.stick{
+  position: absolute;
+  top: 450pt;
+  left: 400pt;
+  height: 50px;
+  background-color: #00FF00;
+}
+.circle{
+  position: absolute;
+  top: 550pt;
+  left: 370pt;
+  height: 50px;
+  -webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+  border-radius: 50%;
+  background-color: #FF0000;
+}
