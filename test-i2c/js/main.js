@@ -19,8 +19,8 @@ I2CAccess.prototype = {
   init: function() {
     this.ports = new Map();
 
-    navigator.mozI2c.open(0, 0x3e);
-    navigator.mozI2c.open(2, 0x3e);
+    navigator.mozI2c.open(0);
+    navigator.mozI2c.open(2);
 
     this.ports.set(0 - 0, new I2CPort(0));
     this.ports.set(2 - 0, new I2CPort(2));
@@ -35,6 +35,11 @@ function I2CPort(portNumber) {
 I2CPort.prototype = {
   init: function(portNumber) {
     this.portNumber = portNumber;
+  },
+
+  setDeviceAddress: function(deviceAddress) {
+    this.deviceAddress = deviceAddress;
+    navigator.mozI2c.setDeviceAddress(this.portNumber, this.deviceAddress);
   },
 
   read: function(command, isOctet) {
@@ -68,6 +73,7 @@ window.addEventListener('load', function (){
     function(i2cAccess) {
       var ports = i2cAccess.ports;
       var port = ports.get(2);
+      port.setDeviceAddress(0x3e);
       // init
       var LCD_CONTRAST = 100;
       Sleep(40);
