@@ -1,0 +1,13 @@
+{
+  "name": "Test PCA9685",
+  "description": "Test PCA9685",
+  "type": "certified",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "stakagi",
+    "url": "http://purl.org/svgmap/"
+  },
+  "icons": {
+    "128": "/style/icons/servo.png"
+  }
+}
