@@ -1,0 +1,24 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+        <title>Test I2C</title>
+        <script src="./js/main_PCA.js"></script>
+    </head>
+    <body>
+        <h3>I2C PCA9685</h3>
+        <p>
+            Angle0: <input type="range" id="angle0" value="0" min="-50" max="50" autocomplete="off"/> <span id="angleVal0">0</span>
+        </p>
+        
+        <p>
+            Angle1: <input type="range" id="angle1" value="0" min="-50" max="50" autocomplete="off"/> <span id="angleVal1">0</span>
+        </p>
+        <p>
+            <span id="i2cInfo">none</span>
+        </p>
+        
+    </body>
+</html>
