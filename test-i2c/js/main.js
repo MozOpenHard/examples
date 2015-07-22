@@ -1,68 +1,5 @@
 'use strict';
 
-navigator.requestI2CAccess = function() {
-  return new Promise(function(resolve, reject) {
-    if (navigator.mozI2c) {
-      var i2cAccess = new I2CAccess()
-      resolve(i2cAccess);
-    } else {
-      reject({'message':'mozI2c not supported'});
-    }
-  });
-}
-
-function I2CAccess() {
-  this.init();
-}
-
-I2CAccess.prototype = {
-  init: function() {
-    this.ports = new Map();
-
-    navigator.mozI2c.open(0);
-    navigator.mozI2c.open(2);
-
-    this.ports.set(0 - 0, new I2CPort(0));
-    this.ports.set(2 - 0, new I2CPort(2));
-    console.log('size=' + this.ports.size);
-  }
-};
-
-function I2CPort(portNumber) {
-  this.init(portNumber);
-}
-
-I2CPort.prototype = {
-  init: function(portNumber) {
-    this.portNumber = portNumber;
-  },
-
-  setDeviceAddress: function(deviceAddress) {
-    this.deviceAddress = deviceAddress;
-    navigator.mozI2c.setDeviceAddress(this.portNumber, this.deviceAddress);
-  },
-
-  read: function(command, isOctet) {
-    return new Promise(function(resolve, reject) {
-      resolve(navigator.mozI2c.read(this.portNumber, command, isOctet));
-    }.bind(this));
-  },
-
-  write8: function(command, value) {
-    return new Promise(function(resolve, reject) {
-      navigator.mozI2c.write(this.portNumber, command, value, true);
-      resolve(value);
-    }.bind(this));
-  },
-
-  write16: function(command, value) {
-    return new Promise(function(resolve, reject) {
-      navigator.mozI2c.write(this.portNumber, command, value, false);
-      resolve(value);
-    }.bind(this));
-  }
-};
-
 window.addEventListener('load', function (){
   function Sleep(millisec) {
     var start = new Date();
@@ -71,8 +8,7 @@ window.addEventListener('load', function (){
 
   navigator.requestI2CAccess().then(
     function(i2cAccess) {
-      var ports = i2cAccess.ports;
-      var port = ports.get(2);
+      var port = i2cAccess.open(2);
       port.setDeviceAddress(0x3e);
       // init
       var LCD_CONTRAST = 100;
