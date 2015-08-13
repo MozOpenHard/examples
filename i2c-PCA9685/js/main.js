@@ -1,4 +1,5 @@
 'use strict';
+var direction=1;
 
 window.addEventListener('load', function (){
   function Sleep(millisec) {
@@ -10,18 +11,20 @@ window.addEventListener('load', function (){
     function(i2cAccess) {
       var port = i2cAccess.open(0);
       
-      var angle = 30;
+      var angle = 0;
       PCA9685.init(port,0x40).then(function(){
         setInterval(function(){
           
           console.log(angle);
           PCA9685.setServo(port,0x40,0,angle);
-          angle +=10;
+          angle +=1 * direction;
           if(angle > 50){
-            angle = 0;
+            direction = -1;
+          }else if(angle < -50){
+            direction = 1;
           }
           
-        },1000);
+        },100);
       });
     },
     function(error) {
