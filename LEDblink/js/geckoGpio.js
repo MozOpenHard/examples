@@ -35,11 +35,43 @@ GPIOAccess.prototype = {
   init: function() {
     this.ports = new Map();
 
-    navigator.mozGpio.export(198);
-    navigator.mozGpio.export(199);
+    navigator.mozGpio.export(163);  //PWM
+    navigator.mozGpio.export(192);  //UART
+    navigator.mozGpio.export(193);  //UART
+    navigator.mozGpio.export(196);  //SPI
+    navigator.mozGpio.export(197);  //SPI
+    navigator.mozGpio.export(198);  //SPI
+    navigator.mozGpio.export(199);  //SPI
+    navigator.mozGpio.export(243);  //SPI
+    navigator.mozGpio.export(244);  //SPI
+    navigator.mozGpio.export(245);  //SPI
+    navigator.mozGpio.export(246);  //SPI
+    navigator.mozGpio.export(252);  //I2C
+    navigator.mozGpio.export(253);  //I2C
+    navigator.mozGpio.export(256);  //I2C
+    navigator.mozGpio.export(257);  //I2C
+    navigator.mozGpio.export(283);  //UART
+    navigator.mozGpio.export(284);  //UART
+    navigator.mozGpio.export(353);  //GPIO
 
+    this.ports.set(163 - 0, new GPIOPort(163));
+    this.ports.set(192 - 0, new GPIOPort(192));
+    this.ports.set(193 - 0, new GPIOPort(193));
+    this.ports.set(196 - 0, new GPIOPort(196));
+    this.ports.set(197 - 0, new GPIOPort(197));
     this.ports.set(198 - 0, new GPIOPort(198));
     this.ports.set(199 - 0, new GPIOPort(199));
+    this.ports.set(243 - 0, new GPIOPort(243));
+    this.ports.set(244 - 0, new GPIOPort(244));
+    this.ports.set(245 - 0, new GPIOPort(245));
+    this.ports.set(246 - 0, new GPIOPort(246));
+    this.ports.set(252 - 0, new GPIOPort(252));
+    this.ports.set(253 - 0, new GPIOPort(253));
+    this.ports.set(256 - 0, new GPIOPort(256));
+    this.ports.set(257 - 0, new GPIOPort(257));
+    this.ports.set(283 - 0, new GPIOPort(283));
+    this.ports.set(284 - 0, new GPIOPort(284));
+    this.ports.set(353 - 0, new GPIOPort(353));
     console.log('size=' + this.ports.size);
   }
 };
@@ -52,6 +84,9 @@ GPIOPort.prototype = {
   init: function(portNumber) {
     this.portNumber = portNumber;
     this.direction = 'out';
+    this.interval = 30;
+    this.value = null;
+    this.timer = null;
   },
 
   setDirection: function(direction) {
@@ -62,11 +97,11 @@ GPIOPort.prototype = {
         if(direction === "in"){
           console.log("in");
           var self = this;
-          _Timer[this.portNumber] = setInterval(_checkValue,_Interval,self);
+          this.timer = setInterval(this.checkValue,this.interval,self);
         }else{
           console.log("out");
-          if(_Timer[this.portNumber]){
-            clearInterval(_Timer[this.portNumber]);            
+          if(this.timer){
+            clearInterval(this.timer);            
           }
           console.log("time");
         }
@@ -102,34 +137,27 @@ GPIOPort.prototype = {
     }.bind(this));
   },
   
+  checkValue:function(port){
+    port.read().then(
+      function(value){
+        if(port.value != null){
+          if(parseInt(value) != parseInt(port.value)){
+            if(typeof(port.onchange) === "function"){
+              port.onchange(value);  
+            }else{
+              console.log("port.onchange is not a function.");
+            }
+          }        
+        }
+        port.value = value;
+      },
+      function(){
+        console.log("check value error");
+      }
+    );
+  },
   onchange:null
 };
-
-var _Timer = {"196":null,"197":null,"198":null,"199":null};
-var _Interval = 100;
-var _readValue = {"196":null,"197":null,"198":null,"199":null};
-function _checkValue(port){
-  //console.log("checkvalue");
-  port.read().then(
-    function(value){
-      //console.log("check value success " + value + ":" + _readValue[port.portno]);
-      if(_readValue[port.portno] != null){
-        if(parseInt(value) != parseInt(_readValue[port.portno])){
-          console.log("onchange");
-          if(typeof(port.onchange) === "function"){
-            port.onchange(value);  
-          }else{
-            console.log("port.onchange is not a function.");
-          }
-        }        
-      }
-      _readValue[port.portno] = value;
-    },
-    function(){
-      console.log("check value error");
-    }
-  );
-}
 
 navigator.setGpioPort = function(portno,dist){
   
