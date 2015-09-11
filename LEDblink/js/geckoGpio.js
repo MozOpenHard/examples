@@ -1,6 +1,6 @@
 'use strict';
 
-navigator.requestGPIOAccess = function() {
+navigator.requestGPIOAccess = function(port) {
   return new Promise(function(resolve, reject) {
     if (!navigator.mozGpio) {
       navigator.mozGpio = new Object();
@@ -22,56 +22,22 @@ navigator.requestGPIOAccess = function() {
       };
     }
 
-    var gpioAccess = new GPIOAccess();
+    var gpioAccess = new GPIOAccess(port);
     resolve(gpioAccess);
   });
 };
 
-function GPIOAccess() {
-  this.init();
+function GPIOAccess(port) {
+  this.init(port);
 }
 
 GPIOAccess.prototype = {
-  init: function() {
+  init: function(port) {
     this.ports = new Map();
-
-    navigator.mozGpio.export(163);  //PWM
-    navigator.mozGpio.export(192);  //UART
-    navigator.mozGpio.export(193);  //UART
-    navigator.mozGpio.export(196);  //SPI
-    navigator.mozGpio.export(197);  //SPI
-    navigator.mozGpio.export(198);  //SPI
-    navigator.mozGpio.export(199);  //SPI
-    navigator.mozGpio.export(243);  //SPI
-    navigator.mozGpio.export(244);  //SPI
-    navigator.mozGpio.export(245);  //SPI
-    navigator.mozGpio.export(246);  //SPI
-    navigator.mozGpio.export(252);  //I2C
-    navigator.mozGpio.export(253);  //I2C
-    navigator.mozGpio.export(256);  //I2C
-    navigator.mozGpio.export(257);  //I2C
-    navigator.mozGpio.export(283);  //UART
-    navigator.mozGpio.export(284);  //UART
-    navigator.mozGpio.export(353);  //GPIO
-
-    this.ports.set(163 - 0, new GPIOPort(163));
-    this.ports.set(192 - 0, new GPIOPort(192));
-    this.ports.set(193 - 0, new GPIOPort(193));
-    this.ports.set(196 - 0, new GPIOPort(196));
-    this.ports.set(197 - 0, new GPIOPort(197));
-    this.ports.set(198 - 0, new GPIOPort(198));
-    this.ports.set(199 - 0, new GPIOPort(199));
-    this.ports.set(243 - 0, new GPIOPort(243));
-    this.ports.set(244 - 0, new GPIOPort(244));
-    this.ports.set(245 - 0, new GPIOPort(245));
-    this.ports.set(246 - 0, new GPIOPort(246));
-    this.ports.set(252 - 0, new GPIOPort(252));
-    this.ports.set(253 - 0, new GPIOPort(253));
-    this.ports.set(256 - 0, new GPIOPort(256));
-    this.ports.set(257 - 0, new GPIOPort(257));
-    this.ports.set(283 - 0, new GPIOPort(283));
-    this.ports.set(284 - 0, new GPIOPort(284));
-    this.ports.set(353 - 0, new GPIOPort(353));
+    
+    navigator.mozGpio.export(port);  //PWM
+    this.ports.set(port - 0, new GPIOPort(port));
+    
     console.log('size=' + this.ports.size);
   }
 };
@@ -162,7 +128,7 @@ GPIOPort.prototype = {
 navigator.setGpioPort = function(portno,dist){
   
   return new Promise(function(resolve, reject){
-    navigator.requestGPIOAccess().then(
+    navigator.requestGPIOAccess(portno).then(
       function(gpioAccess){
         console.log("gpioAccess" + portno);
         var port = gpioAccess.ports.get(portno);
