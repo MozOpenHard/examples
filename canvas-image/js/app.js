@@ -52,11 +52,21 @@ function loadImage(url) {
         for (var x = 0; x < width; x++) {
           var pixel = context.getImageData(x, y, 1, 1).data;
           toLigth(pixel);
+          Sleep(1);
+          if((y>=height-1) && (x>= width-1)){
+            console.log("end");
+            y=0;x=0;
+          }
         }
       }
     } catch(e) { console.log(e);}
   }
   image.src = url;
+}
+
+function Sleep(millisec) {
+  var start = new Date();
+  while(new Date() - start < millisec);
 }
 
 function toLigth(pixel) {
