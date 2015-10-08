@@ -64,10 +64,11 @@ var GroveTouch = {
         
         // get light value
         Promise.all([
-          port.read8(0x01,true),
-          port.read8(0x02,true)
+          port.read8(0x00,true),
+          port.read8(0x01,true)
         ]).then(function(v){
-          var value = ((v[0] << 8) + v[1]);
+          console.log(v[0],v[1]);
+          var value = ((v[1] << 8) + v[0]);
           console.log(value);
           var array = self.arrayFromMask(value);
           resolve(array);
