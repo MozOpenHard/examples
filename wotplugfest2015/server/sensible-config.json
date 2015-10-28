@@ -1,0 +1,8 @@
+{
+	"name" : "chirimen i2c sensor app",
+	"type" : "_sensible._tcp.local",
+	"port" : 8001,
+	"description" : "Sensible basic on Firefox OS",
+	"description" : "Do not allow to become empty!",
+	"hostname" : "chirimenplugfest.local"
+}

@@ -1,0 +1,14 @@
+html,body {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  margin: 0;
+  padding: 100px;
+}
+
+h1{
+  font-size: 64pt;
+}
+div{
+  font-size: 32pt;
+}

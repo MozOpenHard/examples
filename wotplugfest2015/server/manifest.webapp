@@ -1,0 +1,19 @@
+{
+  "name": "plugfest server",
+  "type": "certified",
+  "description": "plugfest server",
+  "origin": "app://chirimenplugfest.org",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/icons/CHIRIMEN.png"
+  },
+  "developer": {
+    "name": "naokisekiguchi",
+    "url": "https://github.com/naokisekiguchi"
+  },
+  "permissions":{
+    "tcp-socket": {},
+    "udp-socket": {},
+    "systemXHR" : {}
+  }
+}
