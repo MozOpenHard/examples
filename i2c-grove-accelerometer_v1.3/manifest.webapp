@@ -1,0 +1,13 @@
+{
+  "name": "I2C Grove accelerometer_v1.3",
+  "description": "I2C Grove 3-Axis Digital Accelerometer sensor",
+  "type": "certified",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "naokisekiguchi",
+    "url": "https://github.com/naokisekiguchi"
+  },
+  "icons": {
+    "128": "/style/icons/sensor.png"
+  }
+}

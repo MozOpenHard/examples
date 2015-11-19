@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+        <title>Test I2C</title>
+        <script src="../test-i2c/js/i2c.js"></script>
+        <script src="./js/DRV8830.js"></script>
+        <script src="./js/main.js"></script>
+        <style>
+            body{
+                padding:100px;
+                font-size:64pt;
+            }
+            button{
+                font-size:64px;
+                padding:20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>I2C</h3>
+        <div id="debug">direction</div>
+        <button id="front">front</button>
+        <button id="back">back</button>
+        <button id="stop">stop</button>
+    </body>
+</html>
