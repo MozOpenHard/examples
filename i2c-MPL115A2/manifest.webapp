@@ -1,0 +1,12 @@
+{
+  "name": "i2c-MPL115A2",
+  "description": "i2c-MPL115A2",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Daisuke Akatsuka",
+    "url": "https://github.com/dadaa/"
+  },
+  "icons": {
+    "128": "/style/icons/sensor.png"
+  }
+}
