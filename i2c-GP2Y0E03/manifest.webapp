@@ -1,0 +1,12 @@
+{
+  "name": "i2c-GP2Y0E03",
+  "description": "i2c-GP2Y0E03",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Daisuke Akatsuka",
+    "url": "https://github.com/dadaa/"
+  },
+  "icons": {
+    "128": "/style/icons/sensor.png"
+  }
+}
